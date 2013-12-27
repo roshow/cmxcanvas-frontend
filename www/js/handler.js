@@ -1,5 +1,4 @@
-/*global document, makeEaseOut, back, linear, jsAnimate, Image, $*/
-/*global define*/
+/*global define, document, makeEaseOut, back, linear, jsAnimate, Image, $*/
 
 define([
   'jquery',

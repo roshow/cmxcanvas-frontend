@@ -1,8 +1,9 @@
 define([
   'underscore',
   'backbone',
-  'models/CmxIssueModel'
-], function(_, Backbone, CmxIssueModel){
+  'models/CmxIssueModel',
+  'conf/config'
+], function(_, Backbone, CmxIssueModel, Conf){
 
   var CmxCollection = Backbone.Collection.extend({
       
@@ -13,7 +14,7 @@ define([
       },
       
       url : function() {
-        return 'http://cmxcanvas.roshow.net/getallcmx';
+        return Conf.api.host + ':' + Conf.api.port + '/getallcmx';
       },       
      
   });

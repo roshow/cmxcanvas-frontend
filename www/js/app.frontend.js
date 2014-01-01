@@ -6,7 +6,8 @@ require.config({
         underscore: 'libs/underscore-min',
         backbone: 'libs/backbone-min',
         bootstrap: 'libs/bootstrap.min',
-        jade: 'templates/cmxtemplates'
+        jade: 'templates/cmxtemplates',
+        crossfading: 'libs/crossfading'
     },
     shim: {
         jade: {
@@ -15,6 +16,9 @@ require.config({
         backbone: {
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
+        },
+        crossfading: {
+            exports: 'Crossfader'
         }
     }
 });

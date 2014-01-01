@@ -8,8 +8,9 @@ define([
     'jquery',
     'underscore',
     'modules/jsAnimate',
-    'modules/PanelCounter'
-], function($, _, Animate, CountManager){
+    'modules/PanelCounter',
+    'crossfading'
+], function($, _, Animate, CountManager, Crossfader){
 
     /** image loading stuff should eventually be moved to its own module **/
     var loadpanelimgs = (function(){
@@ -104,17 +105,22 @@ define([
     }
 
     function movePanels(data) {
-        switch (data.transition) {
-            case 'jumpcut':
-                _panelCounter.goTo(data.curr);
-                break;
-            default:
-                _animating = true;
-                Animate.panels(data.imgObj, data.imgObj_target, _cnv, _ctx, data.direction, function(){
-                    _animating = false;
-                });
-                break;
-        }
+        var crossfader = Crossfader(_cnv, data.imgObj, data.imgObj_target);
+        crossfader.start();
+        // setTimeout(function(){
+        //     crossfader.stop();
+        // }, 7000);
+        // switch (data.transition) {
+        //     case 'jumpcut':
+        //         _panelCounter.goTo(data.curr);
+        //         break;
+        //     default:
+        //         _animating = true;
+        //         Animate.panels(data.imgObj, data.imgObj_target, _cnv, _ctx, data.direction, function(){
+        //             _animating = false;
+        //         });
+        //         break;
+        // }
     }
     function popPopup(popup) {
         _animating = true;

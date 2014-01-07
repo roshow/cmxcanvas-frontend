@@ -44,11 +44,12 @@ function Crossfader(canvas, image1, image2) {
         ticker;
 
     /** @roshow: Center images on canvas when drawing them **/
-    var image1_x = (width - image1.width)/2,
-        image1_y = (height - image1.height)/2,
-        image2_x = (width - image2.width)/2,
+    var image2_x = (width - image2.width)/2,
         image2_y = (height - image2.height)/2;
-
+    if (!image1.isData) {
+        image1_x = (width - image1.width)/2,
+        image1_y = (height - image1.height)/2
+    }
     function init() {
         var i, source, target;
         
@@ -61,8 +62,14 @@ function Crossfader(canvas, image1, image2) {
         target = context.getImageData(0, 0, width, height);
 
         context.clearRect(0, 0, width, height);
-        context.drawImage(image1, image1_x, image1_y);
-        source = context.getImageData(0, 0, width, height);
+        if (!image1.isData) {
+            context.drawImage(image1, image1_x, image1_y);
+            source = context.getImageData(0, 0, width, height);
+        }
+        else {
+            source = image1.img;
+            context.putImageData (source, 0, 0)       
+        }
 
         result = context.createImageData(width, height);
         for (i = 0; i < len; i += 1) {
@@ -99,7 +106,7 @@ function Crossfader(canvas, image1, image2) {
         ticker = window.setInterval(function () {
             value += 0.1;
             tween(0.5 + 0.5 * Math.sin(value));
-            console.log(value);
+            // console.log(value);
             /** @roshow: Aaaaaaaaaaaand... no clue why 4.5 is the end of a complete crossfade. **/
             if (value >= 4.5) window.clearInterval(ticker);
         }, 1000 / 180);

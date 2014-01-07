@@ -105,22 +105,26 @@ define([
     }
 
     function movePanels(data) {
-        var crossfader = Crossfader(_cnv, data.imgObj, data.imgObj_target);
-        crossfader.start();
-        // setTimeout(function(){
-        //     crossfader.stop();
-        // }, 7000);
-        // switch (data.transition) {
-        //     case 'jumpcut':
-        //         _panelCounter.goTo(data.curr);
-        //         break;
-        //     default:
-        //         _animating = true;
-        //         Animate.panels(data.imgObj, data.imgObj_target, _cnv, _ctx, data.direction, function(){
-        //             _animating = false;
-        //         });
-        //         break;
-        // }
+        
+        setTimeout(function(){
+            crossfader.stop();
+        }, 7000);
+        switch (data.transition) {
+            case 'jumpcut':
+                var _imgData = {
+                    isData: true,
+                    img: _ctx.getImageData(0, 0, _cnv.width, _cnv.height)
+                }
+                var crossfader = Crossfader(_cnv, _imgData, data.imgObj_target);
+                crossfader.start();
+                break;
+            default:
+                _animating = true;
+                Animate.panels(data.imgObj, data.imgObj_target, _cnv, _ctx, data.direction, function(){
+                    _animating = false;
+                });
+                break;
+        }
     }
     function popPopup(popup) {
         _animating = true;

@@ -62,6 +62,8 @@ function Crossfader(canvas, image1, image2) {
         target = context.getImageData(0, 0, width, height);
 
         context.clearRect(0, 0, width, height);
+
+    /** @roshow: keep option of sending regular image **/
         if (!image1.isData) {
             context.drawImage(image1, image1_x, image1_y);
             source = context.getImageData(0, 0, width, height);

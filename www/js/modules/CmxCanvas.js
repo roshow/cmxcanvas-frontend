@@ -110,9 +110,6 @@ define([
             isData: true,
             img: _ctx.getImageData(0, 0, _cnv.width, _cnv.height)
         }
-        setTimeout(function(){
-            crossfader.stop();
-        }, 7000);
         switch (data.transition) {
             case 'jumpcut':
                 var crossfader = Crossfader(_cnv, data.image1, data.image2);
@@ -120,7 +117,7 @@ define([
                 break;
             default:
                 _animating = true;
-                Animate.panels(data.image1.img, data.image2, _cnv, _ctx, data.direction, function(){
+                Animate.panels(data.image1, data.image2, _cnv, _ctx, data.direction, function(){
                     _animating = false;
                 });
                 break;

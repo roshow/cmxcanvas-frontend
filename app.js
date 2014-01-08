@@ -1,12 +1,16 @@
 var express = require('express'),
     app = express(),
-    _port = 9999;
+    _port = 7890;
 
 app.use(express.static(__dirname + '/www'));
 
 app.listen(_port);
-app.get('*', function(req, res) {
+app.get('/hello', function(req, res) {
     console.log('handling /');
+    res.send('hello');
+});
+app.get('*', function(req, res) {
+    console.log('handling *');
     res.render('index.jade');
 });
 

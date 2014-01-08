@@ -55,7 +55,7 @@ define([], function(){
               animObj.ctx.clearRect(0, 0, animObj.canvas.width, animObj.canvas.height);
 
 
-              animObj.ctx.drawImage(animObj.target[0], toX[0], toY[0]);
+              animObj.ctx.putImageData(animObj.target[0], toX[0], toY[0]);
               animObj.ctx.drawImage(animObj.target[1], toX[1], toY[1]);
           };
           
@@ -94,25 +94,25 @@ define([], function(){
   function halfDiff(a, b) {
     return (a - b)/2;
   }
-  function animatePanels(imgObj, imgObj_target, cnv, ctx, direction, cb) {
-      var imgObj_x = halfDiff(cnv.width, imgObj.width),
-          imgObj_y = halfDiff(cnv.height, imgObj.height),
-          imgObj_target_x = halfDiff(cnv.width, imgObj_target.width),
-          imgObj_target_y = halfDiff(cnv.height, imgObj_target.height);
-          
+  function animatePanels(image1, image2, cnv, ctx, direction, cb) {
+      var image1_x = halfDiff(cnv.width, image1.width),
+          image1_y = halfDiff(cnv.height, image1.height),
+          image2_x = halfDiff(cnv.width, image2.width),
+          image2_y = halfDiff(cnv.height, image2.height);
+
           jsAnimate.animation({
-              target: [imgObj, imgObj_target],
+              target: [image1, image2],
               from: [
-                { x: imgObj_x, y: imgObj_y },
-                { x: imgObj_target_x + (direction * cnv.width), y: imgObj_target_y} 
+                { x: image1_x, y: image1_y },
+                { x: image2_x + (direction * cnv.width), y: image2_y} 
               ],
               to: [
-                { x: imgObj_x - (direction * cnv.width), y: imgObj_y },
-                          { x: imgObj_target_x, y: imgObj_target_y }
+                { x: image1_x - (direction * cnv.width), y: image1_y },
+                          { x: image2_x, y: image2_y }
               ],
               canvas: cnv,
               ctx: ctx,
-              duration: 400,
+              duration: 500,
               interval: 25,
               aFunction: jsAnimate.makeEaseOut(jsAnimate.back),
               onComplete: function() {
@@ -127,7 +127,7 @@ define([], function(){
           _bkgPartial = ctx.getImageData(popup.x, popup.y, popup.img.width, popup.img.height),
           _frame = 0;
 
-        switch (popup.animation) {
+        switch (popup.transition) {
           case 'fadeIn':
             ctx.globalAlpha = 0;
                 var _fadeIn = setInterval(function(){

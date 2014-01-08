@@ -106,21 +106,21 @@ define([
 
     function movePanels(data) {
         
+        data.image1 = {
+            isData: true,
+            img: _ctx.getImageData(0, 0, _cnv.width, _cnv.height)
+        }
         setTimeout(function(){
             crossfader.stop();
         }, 7000);
         switch (data.transition) {
             case 'jumpcut':
-                var _imgData = {
-                    isData: true,
-                    img: _ctx.getImageData(0, 0, _cnv.width, _cnv.height)
-                }
-                var crossfader = Crossfader(_cnv, _imgData, data.imgObj_target);
+                var crossfader = Crossfader(_cnv, data.image1, data.image2);
                 crossfader.start();
                 break;
             default:
                 _animating = true;
-                Animate.panels(data.imgObj, data.imgObj_target, _cnv, _ctx, data.direction, function(){
+                Animate.panels(data.image1.img, data.image2, _cnv, _ctx, data.direction, function(){
                     _animating = false;
                 });
                 break;
@@ -132,7 +132,7 @@ define([
             img: _loadedPanels[_panelCounter.curr].popups[_popupCounter.curr],
             x: popup.x || 0,
             y: popup.y || 0,
-            animation: popup.animation || 'scaleIn'
+            transition: popup.transition || 'scaleIn'
         }, _cnv, _ctx);
         _animating = false;
     }
@@ -150,8 +150,8 @@ define([
                     _panelCounter.loadNext();
                     var _target = (_loadedPanels[_panelCounter.curr] && _loadedPanels[_panelCounter.curr].img) ? _loadedPanels[_panelCounter.curr].img : _loadedPanels.loading.img;
                     movePanels({
-                        imgObj: _loadedPanels[_panelCounter.prev].img, 
-                        imgObj_target: _target,
+                        image1: _loadedPanels[_panelCounter.prev].img, 
+                        image2: _target,
                         direction: 1,
                         transition: _panelCounter.getData().transition,
                         curr: _panelCounter.curr
@@ -169,8 +169,8 @@ define([
             	if (!_panelCounter.isFirst) {			
                     _panelCounter.loadPrev();
                     movePanels({
-                        imgObj: _loadedPanels[_panelCounter.next].img,
-                        imgObj_target: _loadedPanels[_panelCounter.curr].img,
+                        image1: _loadedPanels[_panelCounter.next].img,
+                        image2: _loadedPanels[_panelCounter.curr].img,
                         direction: -1,
                         transition: _panelCounter.getData().transition,
                         curr: _panelCounter.curr
@@ -189,9 +189,9 @@ define([
 		goToPanel: function(panel) {	
             if (!_animating) { 
                 _panelCounter.goTo(panel);
-                imgObj = _loadedPanels[_panelCounter.curr].img || _loadedPanels.loading.img
+                var _image = _loadedPanels[_panelCounter.curr].img || _loadedPanels.loading.img
                 _ctx.clearRect(0, 0, _cnv.width, _cnv.height);
-                _ctx.drawImage(imgObj, halfDiff(_cnv.width, imgObj.width), halfDiff(_cnv.height, imgObj.height));
+                _ctx.drawImage(_image, halfDiff(_cnv.width, _image.width), halfDiff(_cnv.height, _image.height));
             }
 		}
 	};
@@ -222,9 +222,8 @@ define([
                 for (key in imgs) {
                     _loadedPanels[key] = imgs[key];
                     if (parseInt(key, 10) === _panelCounter.curr) {
-                        imgObj = _loadedPanels[key].img;
                         _ctx.clearRect(0, 0, _cnv.width, _cnv.height);
-                        _ctx.drawImage(imgObj, halfDiff(_cnv.width, imgObj.width), halfDiff(_cnv.height, imgObj.height));
+                        _ctx.drawImage(_loadedPanels[key].img, halfDiff(_cnv.width, _loadedPanels[key].img.width), halfDiff(_cnv.height, _loadedPanels[key].img.height));
                     }
                 }
                 // console.log(_loadedPanels);

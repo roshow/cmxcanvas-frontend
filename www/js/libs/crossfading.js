@@ -68,7 +68,7 @@ function Crossfader(canvas, image1, image2) {
         }
         else {
             source = image1.img;
-            context.putImageData (source, 0, 0)       
+            context.putImageData (source, 0, 0);    
         }
 
         result = context.createImageData(width, height);

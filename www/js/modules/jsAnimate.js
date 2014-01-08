@@ -99,7 +99,7 @@ define([], function(){
           imgObj_y = halfDiff(cnv.height, imgObj.height),
           imgObj_target_x = halfDiff(cnv.width, imgObj_target.width),
           imgObj_target_y = halfDiff(cnv.height, imgObj_target.height);
-
+          
           jsAnimate.animation({
               target: [imgObj, imgObj_target],
               from: [

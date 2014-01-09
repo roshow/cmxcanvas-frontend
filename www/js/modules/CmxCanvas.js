@@ -8,78 +8,9 @@ define([
     'jquery',
     'underscore',
     'modules/CmxCanvasMoves',
+    'modules/CmxCanvasLoader',
     'modules/PanelCounter',
-], function($, _, Animate, CountManager, Crossfader){
-
-    /** image loading stuff should eventually be moved to its own module **/
-    function loadpanelimgs(arg, id, fn){
-            var popupimgs;
-            var popupL = (arg.popups && arg.popups.length > 0) ? arg.popups.length : 0;
-            var loading = 1 + popupL;
-            
-            var panelimg = new Image();
-            panelimg.crossOrigin = "Anonymous";
-            panelimg.onload = function(){
-                /* Remove a loading token and, if none left, run callback */
-                if (!--loading) {
-                    fn({
-                        img: panelimg,
-                        id: id || false,
-                        popups: popupimgs || false
-                    });
-                }
-            };
-            panelimg.src = arg.src;
-            
-            /* If any popups, load the Images */
-            if (popupL) {
-                popupimgs = [];
-                for (var i = 0; i < popupL; i++) {
-                    popupimgs[i] = new Image();
-                    popupimgs[i].crossOrigin = "Anonymous";
-                    popupimgs[i].onload = function(){
-                        /* Remove a loading token and, if none left, run callback */
-                        if (!--loading) {
-                            fn({
-                                img: panelimg,
-                                id: id || false,
-                                popups: popupimgs || false
-                            });
-                        }
-                    }
-                    popupimgs[i].src = arg.popups[i].src;
-                }
-            }
-    }
-
-    function loadAll(imgs2load, fn) {
-        var keys = Object.keys(imgs2load);
-        var L = keys.length;
-        var loadingAll = L;
-        var loadedImgs = [];
-        for (var i = 0; i < L; i++) {
-            loadpanelimgs(imgs2load[keys[i]], keys[i], function(imgs){
-                loadedImgs[imgs.id] = imgs;
-                if (!--loadingAll) {
-                    fn && fn(loadedImgs);
-                }
-            });
-        }
-    }
-
-    /** crazy recursive function to load images staggered-like in the background **/
-    
-    function _throttledLoadArray(imgs2load){
-        loadAll(imgs2load.splice(0,10), function(imgs) {
-            imgs = null;
-            if (imgs2load.length > 0) {
-                _throttledLoadArray(imgs2load);
-            }
-            else {
-                return false;
-            }
-        });
-    }
+], function($, _, Animate, CCLoader, CountManager){
 
 	var _cnv, _ctx, _panelCounter, _popupCounter,
         _animating = false,
@@ -98,9 +29,9 @@ define([
     }
 
     function movePanels(data) {
-        
-        data.image1 = _ctx.getImageData(0, 0, _cnv.width, _cnv.height);
         _animating = true;
+        /** Override image1 with data from the current state of the canvas. **/
+        data.image1 = _ctx.getImageData(0, 0, _cnv.width, _cnv.height);
         Animate.panels[data.transition || 'bounceback'](data, _cnv, _ctx).start(function(){
             _animating = false;
         });
@@ -198,7 +129,7 @@ define([
             }
             _loadedPanels = panelsToKeep;
             panelsToKeep = null;
-            loadAll(dataset, function(imgs){
+            CCLoader.batch(dataset, function(imgs){
                 for (key in imgs) {
                     _loadedPanels[key] = imgs[key];
                     if (parseInt(key, 10) === _panelCounter.curr) {
@@ -214,8 +145,7 @@ define([
 
         /* warm up the local browser's cache */
         var start = new Date();
-        _throttledLoadArray(_panelCounter.data.slice(2), start);
-
+        CCLoader.throttledBatch(_panelCounter.data.slice(2), start);
 		return cmxcanvas;
 	}
 

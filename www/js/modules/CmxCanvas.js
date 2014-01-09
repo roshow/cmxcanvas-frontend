@@ -7,17 +7,12 @@
 define([
     'jquery',
     'underscore',
-    'modules/jsAnimate',
+    'modules/CmxCanvasMoves',
     'modules/PanelCounter',
-    'crossfading'
 ], function($, _, Animate, CountManager, Crossfader){
 
     /** image loading stuff should eventually be moved to its own module **/
-    var loadpanelimgs = (function(){
-        var loadReadyAction = function() {
-            // console.log('loadReadyAction');
-        };
-        function loadpanelimgs(arg, id, fn){
+    function loadpanelimgs(arg, id, fn){
             var popupimgs;
             var popupL = (arg.popups && arg.popups.length > 0) ? arg.popups.length : 0;
             var loading = 1 + popupL;
@@ -55,11 +50,9 @@ define([
                     popupimgs[i].src = arg.popups[i].src;
                 }
             }
-        }
-        return loadpanelimgs;
-    }());
+    }
 
-    function _loadAll(imgs2load, fn) {
+    function loadAll(imgs2load, fn) {
         var keys = Object.keys(imgs2load);
         var L = keys.length;
         var loadingAll = L;
@@ -77,7 +70,7 @@ define([
     /** crazy recursive function to load images staggered-like in the background **/
     
     function _throttledLoadArray(imgs2load){
-        _loadAll(imgs2load.splice(0,10), function(imgs) {
+        loadAll(imgs2load.splice(0,10), function(imgs) {
             imgs = null;
             if (imgs2load.length > 0) {
                 _throttledLoadArray(imgs2load);
@@ -106,22 +99,12 @@ define([
 
     function movePanels(data) {
         
-        data.image1 = {
-            isData: true,
-            img: _ctx.getImageData(0, 0, _cnv.width, _cnv.height)
-        }
-        switch (data.transition) {
-            case 'jumpcut':
-                var crossfader = Crossfader(_cnv, data.image1, data.image2);
-                crossfader.start();
-                break;
-            default:
-                _animating = true;
-                Animate.panels(data.image1, data.image2, _cnv, _ctx, data.direction, function(){
-                    _animating = false;
-                });
-                break;
-        }
+        // data.image1 = _ctx.getImageData(0, 0, _cnv.width, _cnv.height);
+        _animating = true;
+        var _transition = (data.transition) ? data.transition : 'bounceback';
+        Animate.panels[_transition](_ctx.getImageData(0, 0, _cnv.width, _cnv.height), data.image2, _cnv, _ctx, data.direction, function(){
+            _animating = false;
+        });
     }
     function popPopup(popup) {
         _animating = true;
@@ -137,7 +120,9 @@ define([
 	/** The Main Event **/
 	var cmxcanvas = {
 		goToNext: function() {
-            if (!_loadedPanels[_panelCounter.curr]) { _loadingHold = true; }
+            if (!_loadedPanels[_panelCounter.curr]) { 
+                _loadingHold = true;
+            }
 			if(!_animating && !_loadingHold) {
             	if (!_popupCounter.isLast) {
 					_popupCounter.loadNext();
@@ -157,11 +142,11 @@ define([
                 return [_panelCounter, _popupCounter];
 			}
             else {
-                // console.log('CANNOT MOVE');
+                console.log("cannot move");
                 return false;
             }
 		},
-		goToPrev: function() {				
+		goToPrev: function() {
 			if(!_animating) {
             	if (!_panelCounter.isFirst) {			
                     _panelCounter.loadPrev();
@@ -179,11 +164,10 @@ define([
                 return [_panelCounter, _popupCounter];
 			}
             else {
-                // console.log('CANNOT MOVE');
                 return false;
             }
 		},
-		goToPanel: function(panel) {	
+		goToPanel: function(panel) {
             if (!_animating) { 
                 _panelCounter.goTo(panel);
                 var _image = _loadedPanels[_panelCounter.curr].img || _loadedPanels.loading.img
@@ -215,7 +199,7 @@ define([
             }
             _loadedPanels = panelsToKeep;
             panelsToKeep = null;
-            _loadAll(dataset, function(imgs){
+            loadAll(dataset, function(imgs){
                 for (key in imgs) {
                     _loadedPanels[key] = imgs[key];
                     if (parseInt(key, 10) === _panelCounter.curr) {

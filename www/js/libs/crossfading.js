@@ -43,13 +43,10 @@ function Crossfader(canvas, image1, image2) {
         value = 0,
         ticker;
 
-    /** @roshow: Center images on canvas when drawing them **/
+    /** @roshow: Center images on canvas when drawing them. And ALWAYS use data for image1 **/
     var image2_x = (width - image2.width)/2,
         image2_y = (height - image2.height)/2;
-    if (!image1.isData) {
-        image1_x = (width - image1.width)/2,
-        image1_y = (height - image1.height)/2
-    }
+
     function init() {
         var i, source, target;
         
@@ -63,15 +60,17 @@ function Crossfader(canvas, image1, image2) {
 
         context.clearRect(0, 0, width, height);
 
-    /** @roshow: keep option of sending regular image **/
-        if (!image1.isData) {
-            context.drawImage(image1, image1_x, image1_y);
-            source = context.getImageData(0, 0, width, height);
-        }
-        else {
-            source = image1.img;
+        /** @roshow: removed option of sending regular image **/
+        // if (!image1.isData) {
+        //     var image1_x = (width - image1.width)/2,
+        //         image1_y = (height - image1.height)/2;
+        //     context.drawImage(image1, image1_x, image1_y);
+        //     source = context.getImageData(0, 0, width, height);
+        // }
+        // else {
+            source = image1;
             context.putImageData (source, 0, 0);    
-        }
+        // }
 
         result = context.createImageData(width, height);
         for (i = 0; i < len; i += 1) {
@@ -101,7 +100,7 @@ function Crossfader(canvas, image1, image2) {
         frames += 1;
     }
 
-    function start() {
+    function start(cb) {
         /** @roshow: value = 0 is perfectly between the 2 images. Not sure why 1.2 is fully on the first image **/
         value = 1.2;
         timestamp = Date.now();
@@ -110,12 +109,15 @@ function Crossfader(canvas, image1, image2) {
             tween(0.5 + 0.5 * Math.sin(value));
             // console.log(value);
             /** @roshow: Aaaaaaaaaaaand... no clue why 4.5 is the end of a complete crossfade. **/
-            if (value >= 4.5) window.clearInterval(ticker);
+            if (value >= 4.5) {
+                stop(cb);
+            }
         }, 1000 / 180);
     }
 
-    function stop() {
+    function stop(cb) {
         window.clearInterval(ticker);
+        if (typeof cb === "function") cb();
     }
 
     function frameRate() {

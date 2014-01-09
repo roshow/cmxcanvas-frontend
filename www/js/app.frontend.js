@@ -2,23 +2,24 @@
 
 require.config({
     paths: {
-        jquery: 'libs/jquery-2.0.3.min',
-        underscore: 'libs/underscore-min',
+        crossfading: 'libs/crossfading',
         backbone: 'libs/backbone-min',
         bootstrap: 'libs/bootstrap.min',
         jade: 'templates/cmxtemplates',
-        crossfading: 'libs/crossfading'
+        jquery: 'libs/jquery-2.0.3.min',
+        roshowUtils: 'libs/roshowUtils',
+        underscore: 'libs/underscore-min'
     },
     shim: {
-        jade: {
-            exports: 'jade'
-        },
         backbone: {
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
         },
-        crossfading: {
-            exports: 'Crossfader'
+        jade: {
+            exports: 'jade'
+        },
+        roshowUtils: {
+            exports: 'roshowUtils'
         }
     }
 });

@@ -1,47 +1,40 @@
 define([
   'modules/JsAnimateCanvas',
   'crossfading'
-], function(jsAnimate, Crossfade){
+], function(jsAnimate){
 
-  function halfDiff(a, b) {
-    return (a - b)/2;
+  function halfDiff(a, b){
+      return (a - b)/2;
   }
-  function bounceBackPanels(data, cnv, ctx) {
-    return {
-      start: function(cb){
-        var image1_x = halfDiff(cnv.width, data.image1.width),
-          image1_y = halfDiff(cnv.height, data.image1.height),
-          image2_x = halfDiff(cnv.width, data.image2.width),
-          image2_y = halfDiff(cnv.height, data.image2.height);
-          
-          jsAnimate.animation({
-              target: [data.image1, data.image2],
-              from: [
-                { x: image1_x, y: image1_y },
-                { x: image2_x + (data.direction * cnv.width), y: image2_y} 
-              ],
-              to: [
-                { x: image1_x - (data.direction * cnv.width), y: image1_y },
-                { x: image2_x, y: image2_y }
-              ],
-              canvas: cnv,
-              ctx: ctx,
-              duration: 400,
-              interval: 25,
-              aFunction: jsAnimate.makeEaseOut(jsAnimate.back),
-              onComplete: function() {
-                cb && cb();
-              }
-          });
-      }
-    }
+
+  function bounceBackPanels(data, cnv, ctx, cb) {
+    var image1_x = halfDiff(cnv.width, data.image1.width),
+        image1_y = halfDiff(cnv.height, data.image1.height),
+        image2_x = halfDiff(cnv.width, data.image2.width),
+        image2_y = halfDiff(cnv.height, data.image2.height);
+        
+    jsAnimate.animation({
+        target: [data.image1, data.image2],
+        from: [
+          { x: image1_x, y: image1_y },
+          { x: image2_x + (data.direction * cnv.width), y: image2_y} 
+        ],
+        to: [
+          { x: image1_x - (data.direction * cnv.width), y: image1_y },
+          { x: image2_x, y: image2_y }
+        ],
+        canvas: cnv,
+        ctx: ctx,
+        duration: 400,
+        interval: 25,
+        aFunction: jsAnimate.makeEaseOut(jsAnimate.back),
+        onComplete: function() {
+          cb();
+        }
+    });
   }
-  function crossfadePanels(data, cnv, ctx){
-    return {
-      start: function(cb){
-        Crossfader(cnv, data.image1, data.image2).start(cb);
-      }
-    }
+  function crossfadePanels(data, cnv, ctx, cb){
+    Crossfader(cnv, data.image1, data.image2).start(cb);
   }
   function animatePopUp(popup, cnv, ctx){
         popup.dur = popup.dur || 100;
@@ -99,10 +92,22 @@ define([
   }
 
   var Animate = {
-    panels: {
+    panelFunctions: {
       bounceback: bounceBackPanels,
       crossfade: crossfadePanels,
       jumpcut: crossfadePanels
+    },
+    panels: function(data, cnv, ctx){
+      var that = this;
+      /** Override image1 with data from the current state of the canvas. **/
+      data.image1 = ctx.getImageData(0, 0, cnv.width, cnv.height);
+      /** set transition **/
+      var transition = data.transition ? data.transition : 'bounceback';
+      return {
+        start: function(cb){
+          that.panelFunctions[transition](data, cnv, ctx, cb);
+        }
+      }
     },
     popup: animatePopUp
   }

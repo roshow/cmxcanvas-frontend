@@ -30,9 +30,7 @@ define([
 
     function movePanels(data) {
         _animating = true;
-        /** Override image1 with data from the current state of the canvas. **/
-        data.image1 = _ctx.getImageData(0, 0, _cnv.width, _cnv.height);
-        Animate.panels[data.transition || 'bounceback'](data, _cnv, _ctx).start(function(){
+        Animate.panels(data, _cnv, _ctx).start(function(){
             _animating = false;
         });
     }

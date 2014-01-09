@@ -7,7 +7,6 @@ require.config({
         bootstrap: 'libs/bootstrap.min',
         jade: 'templates/cmxtemplates',
         jquery: 'libs/jquery-2.0.3.min',
-        roshowUtils: 'libs/roshowUtils',
         underscore: 'libs/underscore-min'
     },
     shim: {
@@ -17,9 +16,6 @@ require.config({
         },
         jade: {
             exports: 'jade'
-        },
-        roshowUtils: {
-            exports: 'roshowUtils'
         }
     }
 });

@@ -99,10 +99,9 @@ define([
 
     function movePanels(data) {
         
-        // data.image1 = _ctx.getImageData(0, 0, _cnv.width, _cnv.height);
+        data.image1 = _ctx.getImageData(0, 0, _cnv.width, _cnv.height);
         _animating = true;
-        var _transition = (data.transition) ? data.transition : 'bounceback';
-        Animate.panels[_transition](_ctx.getImageData(0, 0, _cnv.width, _cnv.height), data.image2, _cnv, _ctx, data.direction, function(){
+        Animate.panels[data.transition || 'bounceback'](data, _cnv, _ctx).start(function(){
             _animating = false;
         });
     }

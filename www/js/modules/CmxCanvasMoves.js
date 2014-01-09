@@ -6,34 +6,42 @@ define([
   function halfDiff(a, b) {
     return (a - b)/2;
   }
-  function bounceBackPanels(image1, image2, cnv, ctx, direction, cb) {
-      var image1_x = halfDiff(cnv.width, image1.width),
-          image1_y = halfDiff(cnv.height, image1.height),
-          image2_x = halfDiff(cnv.width, image2.width),
-          image2_y = halfDiff(cnv.height, image2.height);
+  function bounceBackPanels(data, cnv, ctx) {
+    return {
+      start: function(cb){
+        var image1_x = halfDiff(cnv.width, data.image1.width),
+          image1_y = halfDiff(cnv.height, data.image1.height),
+          image2_x = halfDiff(cnv.width, data.image2.width),
+          image2_y = halfDiff(cnv.height, data.image2.height);
           
           jsAnimate.animation({
-              target: [image1, image2],
+              target: [data.image1, data.image2],
               from: [
                 { x: image1_x, y: image1_y },
-                { x: image2_x + (direction * cnv.width), y: image2_y} 
+                { x: image2_x + (data.direction * cnv.width), y: image2_y} 
               ],
               to: [
-                { x: image1_x - (direction * cnv.width), y: image1_y },
+                { x: image1_x - (data.direction * cnv.width), y: image1_y },
                 { x: image2_x, y: image2_y }
               ],
               canvas: cnv,
               ctx: ctx,
-              duration: 500,
+              duration: 400,
               interval: 25,
               aFunction: jsAnimate.makeEaseOut(jsAnimate.back),
               onComplete: function() {
                 cb && cb();
               }
           });
+      }
+    }
   }
-  function crossfadePanels(image1, image2, cnv, ctx, direction, cb){
-    var crossfader = Crossfader(cnv, image1, image2).start(cb);
+  function crossfadePanels(data, cnv, ctx){
+    return {
+      start: function(cb){
+        Crossfader(cnv, data.image1, data.image2).start(cb);
+      }
+    }
   }
   function animatePopUp(popup, cnv, ctx){
         popup.dur = popup.dur || 100;
@@ -98,8 +106,6 @@ define([
     },
     popup: animatePopUp
   }
-  function _init(args){
-    return Animate
-  }
+
   return  Animate;
 });

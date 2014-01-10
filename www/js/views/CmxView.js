@@ -25,8 +25,8 @@ define([
       
       /* select first (0) panel in TOC */
       $('#toc0').addClass('active');
-
     },
+
     events: {
       'click .moreinfoBtn': 'toggleMoreInfo',
       'click #leftbutton': 'leftArrow',
@@ -52,6 +52,7 @@ define([
           break;
       }
     },
+
     rightArrow: function(e){
       var _read = this.cmxcanvas.goToNext();
 
@@ -66,7 +67,6 @@ define([
         if (!_read.isFirst) $('#leftbutton .ui-arrow').show();
       }
     },
-
     leftArrow: function(e){
       var _read = this.cmxcanvas.goToPrev();
       // console.log('left arrow');
@@ -84,6 +84,7 @@ define([
         $('#rightbutton .ui-arrow').show();
       }
     },
+    
     tocPanelBtn: function(e){
       var _panel = parseInt($(e.currentTarget).attr('panelNum'), 10);
       this.cmxcanvas.goToPanel(_panel);

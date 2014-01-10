@@ -9,18 +9,13 @@ define([
     var LibraryView = Backbone.View.extend({
     
         el: $('#CmxCanvas'),
-
-        initialize: function() {
-            // console.log(this)
-        },
-
+        initialize: function(){},
         render: function() {
             var _collectionJSON = this.collection.toJSON();
             this.$el.html(jade.templates['library']({issues: _collectionJSON}));
             $('li.libNav').addClass('active');
         },
 
-        
         events: {
             'click .col-sm-4.issueEntry': 'goToComic'
         },

@@ -8,14 +8,10 @@ define([
   var CmxCollection = Backbone.Collection.extend({
       
       // model: CmxIssueModel,
-
-      initialize : function(models, options) {
-        // console.log('initializing CmxCollections');
-      },
+      initialize : function(models, options){},
       parse: function(response, options) {
           return response.data;
       },
-      
       url : function() {
         return Conf.api.host + ':' + Conf.api.port + '/cmx';
       }

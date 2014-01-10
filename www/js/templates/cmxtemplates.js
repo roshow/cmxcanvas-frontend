@@ -294,14 +294,14 @@ buf.push('<div id="library" class="container"> <div class="row">');
       var issue = issues  [$index];
 
 buf.push('<div class="col-sm-4 issueEntry"><a');
-buf.push(attrs({ 'issueId':(issue._id), 'href':("/#/comic/"+issue._id) }, {"issueId":true,"href":true}));
+buf.push(attrs({ 'issueId':(issue.attributes._id), 'href':("/#/comic/"+issue.attributes._id) }, {"issueId":true,"href":true}));
 buf.push('><img');
-buf.push(attrs({ 'src':(issue.thumb), "class": ('img-responsive') }, {"src":true}));
+buf.push(attrs({ 'src':(issue.attributes.thumb), "class": ('img-responsive') }, {"src":true}));
 buf.push('/><p>');
-var __val__ = issue.series.name.toUpperCase() +':'
+var __val__ = issue.attributes.series.name.toUpperCase() +':'
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('<br/>');
-var __val__ = issue.title
+var __val__ = issue.attributes.title
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div>');
     }
@@ -310,14 +310,14 @@ buf.push('</p></a></div>');
       var issue = issues  [$index];
 
 buf.push('<div class="col-sm-4 issueEntry"><a');
-buf.push(attrs({ 'issueId':(issue._id), 'href':("/#/comic/"+issue._id) }, {"issueId":true,"href":true}));
+buf.push(attrs({ 'issueId':(issue.attributes._id), 'href':("/#/comic/"+issue.attributes._id) }, {"issueId":true,"href":true}));
 buf.push('><img');
-buf.push(attrs({ 'src':(issue.thumb), "class": ('img-responsive') }, {"src":true}));
+buf.push(attrs({ 'src':(issue.attributes.thumb), "class": ('img-responsive') }, {"src":true}));
 buf.push('/><p>');
-var __val__ = issue.series.name.toUpperCase() +':'
+var __val__ = issue.attributes.series.name.toUpperCase() +':'
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('<br/>');
-var __val__ = issue.title
+var __val__ = issue.attributes.title
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div>');
    }

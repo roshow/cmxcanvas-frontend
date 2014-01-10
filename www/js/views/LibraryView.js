@@ -11,8 +11,12 @@ define([
         el: $('#CmxCanvas'),
         initialize: function(){},
         render: function() {
-            var _collectionJSON = this.collection.toJSON();
-            this.$el.html(jade.templates['library']({issues: _collectionJSON}));
+            var issuesAvail = this.collection.where({published: 1});
+            this.$el.html(
+              jade.templates['library']({
+                issues: issuesAvail
+              })
+            );
             $('li.libNav').addClass('active');
         },
 

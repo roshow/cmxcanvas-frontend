@@ -36,7 +36,6 @@ define([
     }
 
     var handler = {
-
         loadView: function(V, o) {
             if(!this.navView) {
                 this.navView = new NavView();

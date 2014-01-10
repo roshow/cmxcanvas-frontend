@@ -11,7 +11,7 @@ define([
     el: $("#CmxCanvas"),
 
     initialize: function() {
-      this.model = this.options.model;
+      // this.model = this.options.model;
     },
     render: function() {
       /* Checks to see if it's a touch device and adds the appropriate class to the html dom element. */
@@ -19,20 +19,23 @@ define([
       var _modeljson = this.model.toJSON();
       this.$el.html(jade.templates['cmxreader'](_modeljson));
       $('#leftbutton .ui-arrow').css('display', 'none');
+      
       /* create cmxcanvas class with methods to make life easier */
       this.cmxcanvas = new CmxCanvas(_modeljson, 'cmx');
+      
       /* select first (0) panel in TOC */
       $('#toc0').addClass('active');
+
     },
     events: {
       'click .moreinfoBtn': 'toggleMoreInfo',
       'click #leftbutton': 'leftArrow',
       'click #rightbutton': 'rightArrow',
       'click #toc li': 'tocPanelBtn',
-      // 'touchmove #canvas_container': 'detectSwipe',  
       'touchstart #canvas_container': 'detectSwipe',      
       'touchend #canvas_container': 'detectSwipe'
     },
+
     detectSwipe: function(e) {
       e.preventDefault();
       var td = e.originalEvent;
@@ -46,9 +49,6 @@ define([
           if (Math.abs(touchdiff) > 75) {
             (touchdiff < 0) ? this.rightArrow() : this.leftArrow();
           }
-          break;
-        case "touchmove":
-          // console.log("touchmove");
           break;
       }
     },

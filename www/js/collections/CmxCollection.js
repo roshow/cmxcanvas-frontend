@@ -7,15 +7,18 @@ define([
 
   var CmxCollection = Backbone.Collection.extend({
       
-      model: CmxIssueModel,
+      // model: CmxIssueModel,
 
       initialize : function(models, options) {
         // console.log('initializing CmxCollections');
       },
+      parse: function(response, options) {
+          return response.data;
+      },
       
       url : function() {
-        return Conf.api.host + ':' + Conf.api.port + '/getallcmx';
-      },       
+        return Conf.api.host + ':' + Conf.api.port + '/cmx';
+      }
      
   });
 

@@ -11,7 +11,7 @@ define([
         el: $('#CmxCanvas'),
 
         initialize: function() {
-            this.collection = this.options.collection
+            // console.log(this)
         },
 
         render: function() {

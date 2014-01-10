@@ -60,6 +60,7 @@ define([
             this.collection = new CmxCollection();
             this.collection.fetch({
                 success: function(c, r, o){
+                    // console.log(c);
                     that.loadView(LibraryView, {collection: c});
                 }
             });

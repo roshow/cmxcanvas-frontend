@@ -9,6 +9,7 @@
   "private": true,
   "dependencies": {
     "express": "*",
-    "jade": "*"
+    "jade": "*",
+    "request": "*"
   }
 }

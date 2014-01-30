@@ -1,8 +1,7 @@
 define([
   'underscore',
   'backbone',
-  'models/CmxIssueModel',
-  'conf/config'
+  'models/CmxIssueModel'
 ], function(_, Backbone, CmxIssueModel, Conf){
 
   var CmxCollection = Backbone.Collection.extend({
@@ -13,7 +12,7 @@ define([
           return response.data;
       },
       url : function() {
-        return Conf.api.host + ':' + Conf.api.port + '/cmx';
+        return document.location.origin + '/cmx';
       }
      
   });
